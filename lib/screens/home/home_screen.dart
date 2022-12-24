@@ -1,7 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:scanner_app/screens/home/components/carousel_slider_card.dart';
+import 'package:scanner_app/screens/home/subscreens/capture_images_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -11,6 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final ImagePicker _imagePicker = ImagePicker();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,12 +34,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        
         actions: [
           IconButton(
             onPressed: () async {
-              final images = await CunningDocumentScanner.getPictures();
-              print(images);
+              Navigator.push(context, MaterialPageRoute(builder: ((context) {
+                return const CaptureImages();
+              })));
             },
             icon: const Icon(
               Icons.document_scanner,
@@ -110,7 +113,12 @@ class _HomeScreenState extends State<HomeScreen> {
           items: [
             CarouselSliderCard("Scan and convert images to PDF",
                 "Start Scanning", Icons.document_scanner_outlined, () async {
-              final images = await CunningDocumentScanner.getPictures();
+              // final images =
+              //     await _imagePicker.pickImage(source: ImageSource.camera);
+              // print(images);
+              Navigator.push(context, MaterialPageRoute(builder: ((context) {
+                return const CaptureImages();
+              })));
             }),
             CarouselSliderCard("Translate and convert your files quickly!",
                 "Start Translating", Icons.translate, () async {}),
@@ -120,5 +128,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ],
     );
+  }
+
+  Future captureImages() async {
+    List<XFile> images = [];
   }
 }

@@ -37,6 +37,11 @@ dependencies:
   provider:
   carousel_slider:
   cunning_document_scanner:
+  dcdg:
+  image_picker:
+  pdf:
+  path_provider:
+  permission_handler:
 
 dev_dependencies:
   flutter_test:
