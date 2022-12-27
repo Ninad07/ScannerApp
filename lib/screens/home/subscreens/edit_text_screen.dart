@@ -15,8 +15,9 @@ import '../components/button.dart';
 import '../components/show_dialog.dart';
 
 class EditTextScreen extends StatelessWidget {
-  final String text;
-  const EditTextScreen(this.text, {Key? key}) : super(key: key);
+  final bool translate;
+
+  const EditTextScreen(this.translate, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,9 @@ class EditTextScreen extends StatelessWidget {
                   final pdf = pw.Document();
                   pdf.addPage(pw.Page(build: (pw.Context context) {
                     return pw.Center(
-                      child: pw.Text(text),
+                      child: pw.Text(translate
+                          ? viewModel.translatedText
+                          : viewModel.ocrText),
                     );
                   }));
 
@@ -43,7 +46,7 @@ class EditTextScreen extends StatelessWidget {
                       await Permission.storage.request();
                     }
                     await file.writeAsBytes(await pdf.save());
-                    
+
                     // ignore: use_build_context_synchronously
                     showDialogBox(
                         context,
@@ -65,15 +68,16 @@ class EditTextScreen extends StatelessWidget {
           child: TextFormField(
             keyboardType: TextInputType.multiline,
             maxLines: 99999,
-            initialValue: viewModel.ocrText,
+            initialValue:
+                translate ? viewModel.translatedText : viewModel.ocrText,
             onChanged: (value) {
-              viewModel.updateText(value);
+              translate
+                  ? viewModel.updateText(value)
+                  : viewModel.updateEditText(value);
             },
           ),
         ),
       ));
     });
   }
-
-  
 }

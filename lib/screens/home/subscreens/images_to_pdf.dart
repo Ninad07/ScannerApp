@@ -192,7 +192,7 @@ class PDFConversionScreen extends StatelessWidget {
                     viewModel.toggleProcessing2(false);
         
                     Navigator.push(context, MaterialPageRoute(builder: (context) {
-                      return EditTextScreen(viewModel.ocrText);
+                      return EditTextScreen(false);
                     }));
                   }),
               const SizedBox(height: 10),

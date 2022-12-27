@@ -99,13 +99,13 @@ class TranslateScreen extends StatelessWidget {
                         "http://NachiketJoshi.pythonanywhere.com/translate?image=$url&language=$lang";
                     log(texturl);
                     var response = await http.get(Uri.parse(texturl));
-                    log(response.body);
+                    // log(response.body);
                    
                     viewModel.appendText("${response.body}\n");
                   }
                   viewModel.toggleProcessing(false);
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return EditTextScreen(viewModel.translatedText);
+                    return EditTextScreen(true);
                   }));
                   
                 });

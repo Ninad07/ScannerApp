@@ -113,6 +113,11 @@ class HomeScreenViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateEditText(String text) {
+    ocrText = text;
+    notifyListeners();
+  }
+
   void updateColor(String color) {
     this.color = color;
     notifyListeners();
