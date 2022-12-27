@@ -17,8 +17,8 @@ import 'package:http/http.dart' as http;
 
 import 'edit_text_screen.dart';
 
-class TranslateScreen extends StatelessWidget {
-  const TranslateScreen({Key? key}) : super(key: key);
+class ExtractScreen extends StatelessWidget {
+  const ExtractScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,13 @@ class TranslateScreen extends StatelessWidget {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
-          
+          // Container(
+          //   margin: const EdgeInsets.all(10),
+          //   height: 50,
+          //   width: MediaQuery.of(context).size.width - 50,
+          //   color: Colors.white,
+          //   child:
+          // ),
           Consumer<HomeScreenViewModel>(builder: (context, viewModel, _) {
             return Container(
               margin: const EdgeInsets.all(10),
@@ -98,20 +104,16 @@ class TranslateScreen extends StatelessWidget {
                     log(texturl);
                     var response = await http.get(Uri.parse(texturl));
                     log(response.body);
-                   
+
                     viewModel.appendText("${response.body}\n");
                   }
-                  viewModel.toggleProcessing();
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return EditTextScreen();
                   }));
-                  
                 });
           }),
         ],
       ),
     );
   }
-
-  
 }

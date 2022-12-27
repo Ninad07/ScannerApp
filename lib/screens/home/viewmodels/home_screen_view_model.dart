@@ -16,6 +16,8 @@ class HomeScreenViewModel extends ChangeNotifier {
   bool _isUploading = false;
   String _language = "Hindi";
   String translatedText = "";
+  String color = "hsv";
+  bool isEditing = false;
   Map langmap = {
     "Hindi": "hi",
     "Tamil": "ta",
@@ -72,6 +74,11 @@ class HomeScreenViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+   void toggleProcessing2() {
+    isEditing = !isEditing;
+    notifyListeners();
+  }
+
   void cleanReset() {
     _images.clear();
     _currentPDFName = "";
@@ -91,6 +98,11 @@ class HomeScreenViewModel extends ChangeNotifier {
 
   void updateText(String text) {
     translatedText = text;
+    notifyListeners();
+  }
+
+  void updateColor(String color) {
+    this.color = color;
     notifyListeners();
   }
 }

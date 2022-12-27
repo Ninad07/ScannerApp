@@ -7,11 +7,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner_app/screens/home/components/button.dart';
+import 'package:scanner_app/screens/home/subscreens/color.dart';
 import 'package:scanner_app/screens/home/subscreens/translate.dart';
 import 'package:scanner_app/screens/home/viewmodels/home_screen_view_model.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:http/http.dart' as http;
+
+import 'edit_text_screen.dart';
 
 class PDFConversionScreen extends StatelessWidget {
   const PDFConversionScreen({Key? key}) : super(key: key);
@@ -164,13 +167,54 @@ class PDFConversionScreen extends StatelessWidget {
                 }),
             const SizedBox(height: 10),
             Button(
+                isProcessing: viewModel.isEditing,
+                title: "Extract and Edit Text",
+                function: () async {
+                  viewModel.updateText("");
+                  final pdf = pw.Document();
+                  viewModel.toggleProcessing2();
+                  await viewModel.uploadAllImages();
+                  Directory? appDocDir = await getExternalStorageDirectory();
+                  String path = appDocDir!.path;
+
+                  for (int i = 0; i < viewModel.imageURLs.length; i++) {
+                    var url = viewModel.imageURLs[i];
+
+                    var texturl =
+                        "http://NachiketJoshi.pythonanywhere.com/ocr?image=$url";
+                    log(texturl);
+                    var response = await http.get(Uri.parse(texturl));
+                    log(response.body);
+
+                    viewModel.appendText("${response.body}\n");
+                  }
+                  viewModel.toggleProcessing2();
+
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return EditTextScreen();
+                  }));
+                }),
+            const SizedBox(height: 10),
+            Button(
                 isProcessing: viewModel.isUploading,
                 title: "Translate and Save",
                 function: () async {
-                  Navigator.push(context, MaterialPageRoute(builder: ((context) => TranslateScreen())));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => TranslateScreen())));
                 }),
             const SizedBox(height: 10),
-
+            Button(
+                isProcessing: viewModel.isUploading,
+                title: "Change Color and Save",
+                function: () async {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => ChangeColorScreen())));
+                }),
+            const SizedBox(height: 10),
             Button(
                 title: "< Back to images section",
                 function: () {
