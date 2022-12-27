@@ -16,6 +16,7 @@ class HomeScreenViewModel extends ChangeNotifier {
   bool _isUploading = false;
   String _language = "Hindi";
   String translatedText = "";
+  String ocrText = "";
   String color = "hsv";
   bool isEditing = false;
   Map langmap = {
@@ -64,25 +65,31 @@ class HomeScreenViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggle() {
-    _isProcessing = !_isProcessing;
+  void toggle(bool val) {
+    _isProcessing = val;
     notifyListeners();
   }
 
-  void toggleProcessing() {
-    _isUploading = !_isUploading;
+  void toggleProcessing(bool val) {
+    _isUploading = val;
     notifyListeners();
   }
 
-   void toggleProcessing2() {
-    isEditing = !isEditing;
+  void toggleProcessing2(bool val) {
+    isEditing = val;
     notifyListeners();
   }
 
   void cleanReset() {
     _images.clear();
+    _imageURLs.clear();
     _currentPDFName = "";
     _isProcessing = false;
+    _isUploading = false;
+    isEditing = false;
+    translatedText = ocrText = "";
+    color = "hsv";
+    _language = "Hindi";
     notifyListeners();
   }
 
@@ -93,6 +100,11 @@ class HomeScreenViewModel extends ChangeNotifier {
 
   void appendText(String text) {
     translatedText += text;
+    notifyListeners();
+  }
+
+  void appendEditText(String text) {
+    ocrText += text;
     notifyListeners();
   }
 

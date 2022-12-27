@@ -15,6 +15,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:http/http.dart' as http;
 
+import '../components/show_dialog.dart';
 import 'edit_text_screen.dart';
 
 class ChangeColorScreen extends StatelessWidget {
@@ -68,7 +69,7 @@ class ChangeColorScreen extends StatelessWidget {
                 title: "Proceed >",
                 function: () async {
                   final pdf = pw.Document();
-                  viewModel.toggleProcessing();
+                  viewModel.toggleProcessing(true);
                   await viewModel.uploadAllImages();
                   Directory? appDocDir = await getExternalStorageDirectory();
                   String path = appDocDir!.path;
@@ -77,13 +78,13 @@ class ChangeColorScreen extends StatelessWidget {
                     var url = viewModel.imageURLs[i];
                     log(url);
                     var color = viewModel.color;
-                    
+
                     var colorurl =
                         "http://NachiketJoshi.pythonanywhere.com/color?image=$url&color=$color&name=${viewModel.currentPDFName}.jpg";
-                        log(colorurl);
+                    log(colorurl);
                     var response = await http.get(Uri.parse(colorurl));
                     log(response.body);
-  var res = const Base64Decoder().convert(response.body);
+                    var res = const Base64Decoder().convert(response.body);
                     final ximage = pw.MemoryImage(
                       res,
                     );
@@ -100,22 +101,21 @@ class ChangeColorScreen extends StatelessWidget {
                       await Permission.storage.request();
                     }
                     await file.writeAsBytes(await pdf.save());
-                    viewModel.toggleProcessing();
+                    viewModel.toggleProcessing(false);
                     // ignore: use_build_context_synchronously
-                    _showDialog(
+                    showDialogBox(
                         context,
                         "Result",
                         "Your images have been colored and the pdf has been saved as ${viewModel.currentPDFName}.pdf",
                         "Close and Go Back");
                   } catch (e) {
-                    viewModel.toggleProcessing();
-                    _showDialog(
+                    viewModel.toggleProcessing(false);
+                    showDialogBox(
                         context,
                         "Result",
                         "Something went wrong. Please try again",
                         "Close and Try Again");
                   }
-                  
                 });
           }),
         ],
@@ -123,23 +123,5 @@ class ChangeColorScreen extends StatelessWidget {
     );
   }
 
-  void _showDialog(BuildContext context, String title, String description,
-      String buttonText) async {
-    await showDialog(
-        context: context,
-        builder: (context_) {
-          return AlertDialog(
-            title: Text(title),
-            content: Text(description),
-            actions: [
-              Button(
-                  title: buttonText,
-                  function: () async {
-                    Navigator.of(context_).pop();
-                    Navigator.of(context).pop();
-                  }),
-            ],
-          );
-        });
-  }
+  
 }

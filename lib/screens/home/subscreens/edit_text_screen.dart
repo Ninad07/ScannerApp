@@ -12,9 +12,11 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:http/http.dart' as http;
 
 import '../components/button.dart';
+import '../components/show_dialog.dart';
 
 class EditTextScreen extends StatelessWidget {
-  const EditTextScreen({Key? key}) : super(key: key);
+  final String text;
+  const EditTextScreen(this.text, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,46 +25,47 @@ class EditTextScreen extends StatelessWidget {
           child: Scaffold(
         appBar: AppBar(
           actions: [
-            IconButton(onPressed: () async {
-              Directory? appDocDir = await getExternalStorageDirectory();
+            IconButton(
+                onPressed: () async {
+                  Directory? appDocDir = await getExternalStorageDirectory();
                   String path = appDocDir!.path;
-              final pdf = pw.Document();
-              pdf.addPage(pw.Page(build: (pw.Context context) {
-                      return pw.Center(
-                        child: pw.Text(viewModel.translatedText),
-                      );
-                    }));
+                  final pdf = pw.Document();
+                  pdf.addPage(pw.Page(build: (pw.Context context) {
+                    return pw.Center(
+                      child: pw.Text(text),
+                    );
+                  }));
 
-              try {
+                  try {
                     final file = File("$path/${viewModel.currentPDFName}.pdf");
                     var status = await Permission.storage.status;
                     if (!status.isGranted) {
                       await Permission.storage.request();
                     }
                     await file.writeAsBytes(await pdf.save());
-                    viewModel.toggleProcessing();
+                    
                     // ignore: use_build_context_synchronously
-                    _showDialog(
+                    showDialogBox(
                         context,
                         "Result",
                         "Your translated doc has been saved as ${viewModel.currentPDFName}.pdf",
                         "Close and Go Back");
                   } catch (e) {
-                    viewModel.toggleProcessing();
-                    _showDialog(
+                    showDialogBox(
                         context,
                         "Result",
                         "Something went wrong. Please try again",
                         "Close and Try Again");
                   }
-            }, icon: Icon(Icons.save)),
+                },
+                icon: Icon(Icons.save)),
           ],
         ),
         body: SingleChildScrollView(
           child: TextFormField(
             keyboardType: TextInputType.multiline,
-  maxLines: 99999,
-            initialValue: viewModel.translatedText,
+            maxLines: 99999,
+            initialValue: viewModel.ocrText,
             onChanged: (value) {
               viewModel.updateText(value);
             },
@@ -72,24 +75,5 @@ class EditTextScreen extends StatelessWidget {
     });
   }
 
-  void _showDialog(BuildContext context, String title, String description,
-      String buttonText) async {
-    await showDialog(
-        context: context,
-        builder: (context_) {
-          return AlertDialog(
-            title: Text(title),
-            content: Text(description),
-            actions: [
-              Button(
-                  title: buttonText,
-                  function: () async {
-                    Navigator.of(context_).pop();
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  }),
-            ],
-          );
-        });
-  }
+  
 }

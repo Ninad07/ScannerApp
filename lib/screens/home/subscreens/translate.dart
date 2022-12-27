@@ -23,7 +23,9 @@ class TranslateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("Translate", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,7 +84,7 @@ class TranslateScreen extends StatelessWidget {
                 title: "Proceed >",
                 function: () async {
                   final pdf = pw.Document();
-                  viewModel.toggleProcessing();
+                  viewModel.toggleProcessing(true);
                   await viewModel.uploadAllImages();
                   Directory? appDocDir = await getExternalStorageDirectory();
                   String path = appDocDir!.path;
@@ -101,9 +103,9 @@ class TranslateScreen extends StatelessWidget {
                    
                     viewModel.appendText("${response.body}\n");
                   }
-                  viewModel.toggleProcessing();
+                  viewModel.toggleProcessing(false);
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return EditTextScreen();
+                    return EditTextScreen(viewModel.translatedText);
                   }));
                   
                 });

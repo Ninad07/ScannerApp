@@ -22,6 +22,8 @@ class Button extends StatelessWidget {
             fixedSize: Size(MediaQuery.of(context).size.width - 100, 45)),
         child: isProcessing
             ? const SizedBox(
+              height: 15,
+              width: 15,
                 child: CircularProgressIndicator(
                   color: Colors.white,
                   strokeWidth: 3,
