@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner_app/screens/home/viewmodels/home_screen_view_model.dart';
@@ -5,6 +6,8 @@ import 'package:scanner_app/screens/splash/splash_screen.dart';
 import 'package:dcdg/dcdg.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   runApp(const ScannerApp());
 }
 

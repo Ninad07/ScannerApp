@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "233193800836",
+    "project_id": "scan-it-ba3d8",
+    "storage_bucket": "scan-it-ba3d8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233193800836:android:857fa6b6f2b5ca73baeed1",
+        "android_client_info": {
+          "package_name": "com.viit.scanner_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "233193800836-63i7g1thph7cnen647onsmg53u9hdrpi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdj8ExUPsmDYDGFXsf-DgMwpAa-DqFCJc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "233193800836-63i7g1thph7cnen647onsmg53u9hdrpi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

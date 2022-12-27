@@ -36,12 +36,14 @@ dependencies:
   cupertino_icons: ^1.0.2
   provider:
   carousel_slider:
-  cunning_document_scanner:
   dcdg:
   image_picker:
   pdf:
   path_provider:
   permission_handler:
+  firebase_core:
+  firebase_storage:
+  github:
 
 dev_dependencies:
   flutter_test:

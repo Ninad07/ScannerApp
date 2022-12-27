@@ -44,27 +44,28 @@ class _CaptureImagesState extends State<CaptureImages> {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           leading: Consumer<HomeScreenViewModel>(
-            
-            builder: (context, homeScreenViewModel, _) {
-              return IconButton(
-                  onPressed: () {
-                    homeScreenViewModel.cleanReset();
-                    Navigator.of(context).pop();
-                  },
-                  icon: const Icon(Icons.arrow_back));
-            }
-          ),
-          actions: [
-            IconButton(
-                onPressed: () async {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return PDFConversionScreen();
-                  }));
+              builder: (context, homeScreenViewModel, _) {
+            return IconButton(
+                onPressed: () {
+                  homeScreenViewModel.cleanReset();
+                  Navigator.of(context).pop();
                 },
-                icon: const Icon(
-                  Icons.picture_as_pdf,
-                  color: Colors.white,
-                ))
+                icon: const Icon(Icons.arrow_back));
+          }),
+          actions: [
+            Consumer<HomeScreenViewModel>(builder: (context, viewModel, _) {
+              return IconButton(
+                  onPressed: () async {
+                    // ignore: use_build_context_synchronously
+                    Navigator.push(context, MaterialPageRoute(builder: (_) {
+                      return PDFConversionScreen();
+                    }));
+                  },
+                  icon: const Icon(
+                    Icons.picture_as_pdf,
+                    color: Colors.white,
+                  ));
+            })
           ],
         ),
         body: Consumer<HomeScreenViewModel>(
@@ -76,14 +77,13 @@ class _CaptureImagesState extends State<CaptureImages> {
                 crossAxisCount: 2),
             itemBuilder: (context, index) {
               return Container(
-                margin: const EdgeInsets.all(5),
-                child: images.isEmpty
-                    ? null
-                    : Image.file(
-                        File(images[index]),
-                        fit: BoxFit.cover,
-                      ),
-              );
+                  margin: const EdgeInsets.all(5),
+                  child: images.isEmpty
+                      ? null
+                      : Image.file(
+                          File(images[index].path),
+                          fit: BoxFit.cover,
+                        ));
             },
           );
         }),

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -6,9 +7,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner_app/screens/home/components/button.dart';
+import 'package:scanner_app/screens/home/subscreens/translate.dart';
 import 'package:scanner_app/screens/home/viewmodels/home_screen_view_model.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:http/http.dart' as http;
 
 class PDFConversionScreen extends StatelessWidget {
   const PDFConversionScreen({Key? key}) : super(key: key);
@@ -112,6 +115,62 @@ class PDFConversionScreen extends StatelessWidget {
                   }
                 }),
             const SizedBox(height: 10),
+            Button(
+                isProcessing: viewModel.isUploading,
+                title: "Auto Crop and Save",
+                function: () async {
+                  viewModel.toggleProcessing();
+                  await viewModel.uploadAllImages();
+                  Directory? appDocDir = await getExternalStorageDirectory();
+                  String path = appDocDir!.path;
+
+                  for (int i = 0; i < viewModel.imageURLs.length; i++) {
+                    var url = viewModel.imageURLs[i];
+                    var image =
+                        "http://NachiketJoshi.pythonanywhere.com/crop?image=$url&name=${viewModel.images[i].name}";
+                    var response = await http.get(Uri.parse(image));
+                    var res = const Base64Decoder().convert(response.body);
+                    final ximage = pw.MemoryImage(
+                      res,
+                    );
+                    pdf.addPage(pw.Page(build: (pw.Context context) {
+                      return pw.Center(
+                        child: pw.Image(ximage),
+                      );
+                    }));
+                  }
+                  try {
+                    final file = File("$path/${viewModel.currentPDFName}.pdf");
+                    var status = await Permission.storage.status;
+                    if (!status.isGranted) {
+                      await Permission.storage.request();
+                    }
+                    await file.writeAsBytes(await pdf.save());
+                    viewModel.toggleProcessing();
+                    // ignore: use_build_context_synchronously
+                    _showDialog(
+                        context,
+                        "Result",
+                        "Your images have been auto cropped and the pdf has been saved as ${viewModel.currentPDFName}.pdf",
+                        "Close and Go Back");
+                  } catch (e) {
+                    viewModel.toggleProcessing();
+                    _showDialog(
+                        context,
+                        "Result",
+                        "Something went wrong. Please try again",
+                        "Close and Try Again");
+                  }
+                }),
+            const SizedBox(height: 10),
+            Button(
+                isProcessing: viewModel.isUploading,
+                title: "Translate and Save",
+                function: () async {
+                  Navigator.push(context, MaterialPageRoute(builder: ((context) => TranslateScreen())));
+                }),
+            const SizedBox(height: 10),
+
             Button(
                 title: "< Back to images section",
                 function: () {
